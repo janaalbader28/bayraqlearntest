@@ -139,6 +139,16 @@ export function CoursesBrowser({ variant = "public" }: { variant?: CoursesBrowse
     return cat;
   };
 
+  const [enrolledIds, setEnrolledIds] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (!user) return;
+    fetch("/api/user/enrolled-ids")
+      .then((r) => r.ok ? r.json() : { ids: [] })
+      .then((data: { ids: number[] }) => setEnrolledIds(new Set(data.ids)))
+      .catch(() => null);
+  }, [user]);
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [query, setQuery] = useState("");
   const [duration, setDuration] = useState("");
@@ -350,20 +360,23 @@ export function CoursesBrowser({ variant = "public" }: { variant?: CoursesBrowse
                     ? course.short_description_ar
                     : course.short_description || course.description || t.courses.defaultDesc;
 
+                const isEnrolled = enrolledIds.has(course.id);
                 const nextPath = isFree
                   ? `/dashboard/courses/${course.id}`
                   : `/dashboard/courses/${course.id}/checkout`;
                 const isSample = course.id === 9999;
                 const dashboardOpenHref = isSample ? `/courses` : `/dashboard/courses/${course.id}`;
-                // Admins use the public detail page only; students get enroll/buy flow
+                // Enrolled users go to dashboard; others get enroll/buy flow
                 const ctaHref =
                   variant === "dashboard"
                     ? dashboardOpenHref
                     : isAdmin
                       ? `/courses/${course.id}`
-                      : user
-                        ? nextPath
-                        : `/login?next=${encodeURIComponent(`/courses/${course.id}`)}`;
+                      : isEnrolled
+                        ? `/dashboard/courses/${course.id}`
+                        : user
+                          ? nextPath
+                          : `/login?next=${encodeURIComponent(`/courses/${course.id}`)}`;
 
                 return (
                   <motion.article
@@ -444,7 +457,11 @@ export function CoursesBrowser({ variant = "public" }: { variant?: CoursesBrowse
                                 href={ctaHref}
                                 className="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
                               >
-                                {isFree ? t.courses.startCourse : t.courses.buyCourse}
+                                {isEnrolled
+                                  ? (t.courseDetail.continueLearning ?? "Continue learning")
+                                  : isFree
+                                    ? t.courses.startCourse
+                                    : t.courses.buyCourse}
                               </Link>
                             )}
                           </>

@@ -23,8 +23,10 @@ type CourseDetailProps = {
   thumbnail: string | null;
   isFree: boolean;
   isLoggedIn: boolean;
+  isEnrolled: boolean;
   loginHref: string;
   actionHref: string;
+  continueLearningHref: string;
 };
 
 function buildRequirements(
@@ -83,7 +85,6 @@ function buildGoals(
 }
 
 export function CourseDetailClient({
-  id,
   title,
   title_ar,
   short_description,
@@ -98,8 +99,10 @@ export function CourseDetailClient({
   thumbnail,
   isFree,
   isLoggedIn,
+  isEnrolled,
   loginHref,
   actionHref,
+  continueLearningHref,
 }: CourseDetailProps) {
   const { t, lang, isRTL } = useLanguage();
   const cd = t.courseDetail;
@@ -112,8 +115,16 @@ export function CourseDetailClient({
   const requirements = buildRequirements(String(level), category, cd);
   const goals = buildGoals(displayTitle, category, cd);
 
-  const primaryLabel = isFree ? cd.startCourse : cd.buyCourse;
-  const href = isLoggedIn ? actionHref : loginHref;
+  const primaryLabel = isEnrolled
+    ? cd.continueLearning
+    : isFree
+      ? cd.startCourse
+      : cd.buyCourse;
+  const href = isEnrolled
+    ? continueLearningHref
+    : isLoggedIn
+      ? actionHref
+      : loginHref;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900" dir={isRTL ? "rtl" : "ltr"}>

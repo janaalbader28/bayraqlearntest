@@ -22,12 +22,20 @@ export default async function PublicCoursePage({
 
   if (!course) notFound();
 
+  let isEnrolled = false;
   if (session?.user?.id) {
     const enrollment = await prisma.courseEnrollment.findFirst({
-      where: { course_id: id, user_id: session.user.id },
+      where: {
+        course_id: id,
+        user_id: session.user.id,
+        status: { in: ["active", "completed"] },
+      },
       select: { id: true },
     });
-    if (enrollment) redirect(`/dashboard/courses/${id}`);
+    if (enrollment) {
+      isEnrolled = true;
+      redirect(`/dashboard/courses/${id}`);
+    }
   }
 
   const price = Number(course.price);
@@ -51,8 +59,10 @@ export default async function PublicCoursePage({
         thumbnail={course.thumbnail ?? null}
         isFree={price === 0}
         isLoggedIn={!!session?.user?.id}
+        isEnrolled={isEnrolled}
         loginHref={`/login?next=${encodeURIComponent(`/courses/${id}`)}`}
         actionHref={price === 0 ? `/dashboard/courses/${id}` : `/dashboard/courses/${id}/checkout`}
+        continueLearningHref={`/dashboard/courses/${id}`}
       />
     </div>
   );

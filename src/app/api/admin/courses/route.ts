@@ -5,7 +5,6 @@ import { isAdminRole } from "@/lib/admin";
 import { logAuditAction } from "@/lib/logger";
 import type { CourseStatus } from "@prisma/client";
 export const dynamic = "force-dynamic";
-
 export async function POST(request: NextRequest) {
     try {
         const session = await getSession();

@@ -35,16 +35,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
     }
 
-    const course = await prisma.course.findUnique({
-      where: { id: courseId },
-      select: {
-        id: true, title: true, price: true, duration_hours: true,
-        zoom_link: true, schedule_json: true, whatsapp_link: true,
-        is_live_course: true, short_description: true, category: true,
-      },
-    });
+    const [course, existingEnrollment] = await Promise.all([
+      prisma.course.findUnique({
+        where: { id: courseId },
+        select: {
+          id: true, title: true, price: true, duration_hours: true,
+          zoom_link: true, schedule_json: true, whatsapp_link: true,
+          is_live_course: true, short_description: true, category: true,
+        },
+      }),
+      prisma.courseEnrollment.findFirst({
+        where: {
+          user_id: session.user.id,
+          course_id: courseId,
+          status: { in: ["active", "completed"] },
+        },
+        select: { id: true },
+      }),
+    ]);
+
     if (!course) {
       return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
+    if (existingEnrollment) {
+      return NextResponse.json(
+        { error: "Already enrolled", alreadyEnrolled: true },
+        { status: 409 }
+      );
     }
 
     // Keep Prisma Decimal for storage, derive a plain number only for display/email

@@ -14,7 +14,6 @@ import { getSession } from "@/lib/auth";
 import { isAdminRole } from "@/lib/admin";
 import { sendReminderEmail } from "@/lib/email";
 export const dynamic = "force-dynamic";
-
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
