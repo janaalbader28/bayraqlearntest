@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { BADGE_DEFINITIONS } from "@/lib/badge-definitions";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {

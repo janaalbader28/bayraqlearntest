@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
     "seed": "npx tsx scripts/seed-data.ts",
     "seed:rich": "npx tsx scripts/seed-rich-course.ts",
     "seed:all": "npx tsx scripts/seed-all-courses.ts"

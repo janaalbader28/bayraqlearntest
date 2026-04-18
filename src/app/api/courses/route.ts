@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import type { CourseStatus, Level } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 function asInt(value: string | null, fallback: number): number {
   const n = value ? Number.parseInt(value, 10) : Number.NaN;

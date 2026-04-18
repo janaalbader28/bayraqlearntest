@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { AdminOverviewClient } from "@/components/admin/AdminOverviewClient";
+export const dynamic = "force-dynamic";
 
 export default async function AdminOverviewPage() {
   const [usersCount, coursesCount, enrollmentCount, avgRatingAgg, popular] = await Promise.all([

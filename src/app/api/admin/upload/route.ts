@@ -3,6 +3,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { getSession } from "@/lib/auth";
 import { isAdminRole } from "@/lib/admin";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const session = await getSession();

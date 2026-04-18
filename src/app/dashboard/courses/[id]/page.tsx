@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { DashboardCourseClient } from "@/components/dashboard/DashboardCourseClient";
+export const dynamic = "force-dynamic";
 
 type ModuleSummary = {
   title: string;

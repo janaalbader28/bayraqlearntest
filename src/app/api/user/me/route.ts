@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession, logout } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await getSession();

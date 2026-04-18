@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { isAdminRole } from "@/lib/admin";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {

@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { HomeNav } from "@/components/marketing/HomeNav";
 import { CourseDetailClient } from "@/components/course/CourseDetailClient";
+export const dynamic = "force-dynamic";
 
 export default async function PublicCoursePage({
   params,

@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { awardBadges } from "@/lib/badges";
 import { logAuditAction } from "@/lib/logger";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
     try {

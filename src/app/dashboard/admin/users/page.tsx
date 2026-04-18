@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { AdminUsersClient } from "@/components/admin/AdminUsersClient";
+export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
   const startOfMonth = new Date();

@@ -3,6 +3,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const session = await getSession();

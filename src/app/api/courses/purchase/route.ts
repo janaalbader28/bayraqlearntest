@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { awardBadges } from "@/lib/badges";
 import { sendPurchaseEmail } from "@/lib/email";
 import { logAuditAction } from "@/lib/logger";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {

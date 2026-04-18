@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { AdminCoursesListClient } from "@/components/admin/AdminCoursesListClient";
+export const dynamic = "force-dynamic";
 
 export default async function AdminCoursesPage() {
   const [courses, totalCourses, openCourses, mostEnrolled] = await Promise.all([

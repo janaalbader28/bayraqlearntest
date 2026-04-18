@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { AdminSettingsClient } from "@/components/admin/AdminSettingsClient";
+export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
   const session = await getSession();

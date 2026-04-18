@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import {
+export const dynamic = "force-dynamic";
   ArrowLeft, Loader2, Upload, Link2, Plus, Trash2,
   ChevronRight, ChevronLeft, BookOpen, Video,
 } from "lucide-react";

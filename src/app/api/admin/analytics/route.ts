@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-
+export const dynamic = "force-dynamic";
 function getLast12Months(): { key: string; label: string; start: Date; end: Date }[] {
   const months = [];
   const now = new Date();

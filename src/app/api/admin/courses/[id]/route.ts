@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { isAdminRole } from "@/lib/admin";
 import { logAuditAction } from "@/lib/logger";
 import type { CourseStatus, Level } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 function parseStatus(raw: unknown): CourseStatus | undefined {
   if (raw === "published" || raw === "draft" || raw === "archived") return raw;

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { CertificatesClient } from "@/components/dashboard/CertificatesClient";
+export const dynamic = "force-dynamic";
 
 export default async function CertificatesPage() {
   const session = await getSession();

@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { login } from "@/lib/auth";
 import { logSecurityEvent } from "@/lib/logger";
+export const dynamic = "force-dynamic";
 
 const LOGIN_USER_SELECT = {
     id: true,

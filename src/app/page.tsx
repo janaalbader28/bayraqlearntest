@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { HomeNav } from "@/components/marketing/HomeNav";
 import { HomePageContent } from "@/components/marketing/HomePageContent";
+export const dynamic = "force-dynamic";
 
 type DisplayCourse = {
   id: number;

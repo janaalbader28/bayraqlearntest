@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import { QuizPlayerClient } from "@/components/course/QuizPlayerClient";
 import type { PlayerModule } from "@/components/course/CoursePlayerClient";
+export const dynamic = "force-dynamic";
 
 function extractModuleTitle(content: string | null): string | null {
   if (!content) return null;
