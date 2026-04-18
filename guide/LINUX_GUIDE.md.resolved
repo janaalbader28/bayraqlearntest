@@ -1,0 +1,74 @@
+# Bayraq Cyber Academy // Linux Deployment Guide
+
+This guide outlines the procedure for deploying the Bayraq Cyber Academy on a Linux-based tactical environment (Ubuntu/Debian recommended).
+
+## 1. System Requirements
+- **OS**: Ubuntu 22.04 LTS or newer
+- **CPU**: 2 Cores minimum
+- **RAM**: 4GB minimum
+- **Engine**: Node.js 18.x or 20.x (LTS)
+- **Database**: MySQL 8.0+ or MariaDB 10.6+
+
+## 2. Fast-Track Deployment (Automated)
+
+We have provided a deployment script to automate the environment setup.
+
+```bash
+# 1. Navigate to the project directory
+cd /path/to/bayraq-academy
+
+# 2. Grant execution permissions
+chmod +x deploy.sh
+
+# 3. Execute the deployment suite
+./deploy.sh
+```
+
+## 3. Manual Deployment Procedure
+
+If you prefer manual control, follow these tactical steps:
+
+### A. Environment Setup
+```bash
+# Install Node.js (via NVM recommended)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm install 20
+nvm use 20
+
+# Install Dependencies
+npm install
+```
+
+### B. Database Configuration
+Edit your [.env](file:///c:/xampp/htdocs/BayraqCyber/bayraq-academy/.env) file to point to your Linux MySQL instance:
+```env
+DATABASE_URL="mysql://db_user:db_password@localhost:3306/bayraq_cyber_academy"
+JWT_SECRET="your_secure_random_hash"
+```
+
+### C. Initialization & Build
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Finalize Production Build
+npm run build
+```
+
+## 4. Operational Management (PM2)
+To ensure the academy remains operational after terminal disconnection, use **PM2**:
+
+```bash
+# Install PM2 globally
+sudo npm install -g pm2
+
+# Start the application
+pm2 start npm --name "bayraq-academy" -- start
+
+# Configure persistence on reboot
+pm2 save
+pm2 startup
+```
+
+---
+© 2026 Bayraq Cyber Academy // Tactical Deployment Division

@@ -1,0 +1,443 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  student
+  instructor
+  admin
+  super_admin
+}
+
+enum Level {
+  beginner
+  intermediate
+  advanced
+}
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  email             String    @unique
+  phone_number      String?
+  password          String
+  nickname          String?
+  specialization    String?
+  profile_image     String?
+  bio               String?   @db.Text
+  is_verified       Boolean   @default(false)
+  is_active         Boolean   @default(true)
+  is_admin          Boolean   @default(false)
+  verification_code String?
+  role              Role      @default(student)
+  locked_until      DateTime?
+  failed_attempts   Int       @default(0)
+  last_login        DateTime?
+  last_activity     DateTime?
+  date_of_birth     DateTime?
+  country           String?   @db.VarChar(120)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  sessions       UserSession[]
+  enrollments    CourseEnrollment[]
+  lessonProgress LessonProgress[]
+  reviews        CourseReview[]
+  certificates   Certificate[]
+  payments       Payment[]
+  couponUsage    CouponUsage[]
+  notifications  Notification[]
+  securityEvents SecurityEvent[]
+  auditLogs      AuditLog[]
+  quizAttempts   QuizAttempt[]
+  badges         UserBadge[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id                 String   @id @default(uuid())
+  user_id            Int
+  ip_address         String?
+  user_agent         String?  @db.Text
+  device_fingerprint String?
+  created_at         DateTime @default(now())
+  last_activity      DateTime @updatedAt
+  expires_at         DateTime?
+  is_active          Boolean  @default(true)
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+model Course {
+  id                    Int          @id @default(autoincrement())
+  title                 String
+  title_ar              String?      @db.VarChar(500)
+  description           String?      @db.Text
+  description_ar        String?      @db.Text
+  short_description     String?      @db.VarChar(500)
+  short_description_ar  String?      @db.VarChar(500)
+  instructor_name       String
+  instructor_bio        String?      @db.Text
+  category              String
+  level                 Level        @default(beginner)
+  price                 Decimal      @default(0.00) @db.Decimal(10, 2)
+  duration_hours        Int          @default(0)
+  thumbnail             String?      @db.VarChar(500)
+  preview_video         String?      @db.VarChar(500)
+  status                CourseStatus @default(draft)
+  tags                  String?      @db.VarChar(500)
+  is_featured           Boolean      @default(false)
+  enrollment_count      Int          @default(0)
+  rating                Decimal      @default(0.00) @db.Decimal(3, 2)
+  rating_count          Int          @default(0)
+  // Live course fields
+  is_live_course        Boolean      @default(false)
+  zoom_link             String?      @db.VarChar(500)
+  schedule_json         String?      @db.Text
+  whatsapp_link         String?      @db.VarChar(500)
+  created_at            DateTime     @default(now())
+  updated_at            DateTime     @updatedAt
+
+  enrollments CourseEnrollment[]
+  lessons     CourseLesson[]
+  quizzes     CourseQuiz[]
+  reviews     CourseReview[]
+  files         CourseFile[]
+  uploadedFiles UploadedFile[]
+  certificates  Certificate[]
+
+  @@map("courses")
+}
+
+model CourseEnrollment {
+  id                  Int      @id @default(autoincrement())
+  user_id             Int
+  course_id           Int
+  enrollment_date     DateTime @default(now())
+  progress_percentage Decimal  @default(0.00) @db.Decimal(5, 2)
+  is_completed        Boolean  @default(false)
+  completion_date     DateTime?
+  status              String   @default("active") // active, cancelled, completed
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@map("course_enrollments")
+}
+
+model CourseLesson {
+  id               Int      @id @default(autoincrement())
+  course_id        Int
+  title            String
+  content          String?  @db.LongText
+  lesson_order     Int      @default(1)
+  duration_minutes Int      @default(0)
+  is_free          Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  course   Course           @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+  files    LessonFile[]
+
+  @@map("course_lessons")
+}
+
+model LessonProgress {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  lesson_id    Int
+  is_completed Boolean   @default(false)
+  completed_at DateTime?
+  created_at   DateTime  @default(now())
+
+  user   User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  lesson CourseLesson @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, lesson_id])
+  @@map("lesson_progress")
+}
+
+// ... Additional models follow the same logic as the SQL file
+// simplified for now, I will add more as needed
+
+model LessonFile {
+  id         Int      @id @default(autoincrement())
+  lesson_id  Int
+  file_name  String
+  file_path  String   @db.VarChar(500)
+  file_type  String?
+  file_size  Int      @default(0)
+  created_at DateTime @default(now())
+
+  lesson CourseLesson @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
+
+  @@map("lesson_files")
+}
+
+model CourseQuiz {
+  id            Int      @id @default(autoincrement())
+  course_id     Int
+  title         String
+  description   String?  @db.Text
+  passing_score Int      @default(70)
+  time_limit    Int?
+  max_attempts  Int      @default(3)
+  quiz_order    Int      @default(1)
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  course    Course         @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+
+  @@map("course_quizzes")
+}
+
+model QuizQuestion {
+  id            Int      @id @default(autoincrement())
+  quiz_id       Int
+  question_text String   @db.Text
+  question_type String   @default("multiple_choice")
+  points        Int      @default(1)
+  question_order Int     @default(1)
+  created_at    DateTime @default(now())
+
+  quiz    CourseQuiz   @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+
+  @@map("quiz_questions")
+}
+
+model QuizAnswer {
+  id          Int      @id @default(autoincrement())
+  question_id Int
+  answer_text String   @db.Text
+  is_correct  Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  question QuizQuestion @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@map("quiz_answers")
+}
+
+model QuizAttempt {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  quiz_id      Int
+  score        Decimal  @default(0.00) @db.Decimal(5, 2)
+  total_points Int      @default(0)
+  earned_points Int     @default(0)
+  passed       Boolean  @default(false)
+  answers_data Json?
+  attempt_date DateTime @default(now())
+
+  user User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  quiz CourseQuiz @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+
+  @@map("user_quiz_attempts")
+}
+
+model CourseReview {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  course_id   Int
+  rating      Int
+  comment     String?  @db.Text
+  is_approved Boolean  @default(true)
+  created_at  DateTime @default(now())
+
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@map("course_reviews")
+}
+
+model CourseFile {
+  id             Int      @id @default(autoincrement())
+  course_id      Int
+  original_name  String
+  file_name      String
+  file_extension String?
+  file_path      String   @db.VarChar(500)
+  created_at     DateTime @default(now())
+
+  course Course @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@map("course_files")
+}
+
+model Certificate {
+  id                 Int      @id @default(autoincrement())
+  user_id            Int
+  course_id          Int
+  certificate_number String
+  verification_code  String   @unique
+  issue_date         DateTime @default(now())
+  is_valid           Boolean  @default(true)
+
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@map("certificates")
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  course_id      Int?
+  amount         Decimal  @db.Decimal(10, 2)
+  currency       String   @default("SAR")
+  status         String   @default("pending") // pending, completed, failed, refunded
+  payment_method String?
+  transaction_id String?
+  created_at     DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  title      String
+  message    String?  @db.Text
+  type       String   @default("info")
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model SecurityEvent {
+  id                 Int      @id @default(autoincrement())
+  event_type         String
+  user_id            Int?
+  ip_address         String?
+  user_agent         String?  @db.Text
+  device_fingerprint String?
+  description        String?  @db.Text
+  severity           String   @default("medium") // low, medium, high, critical
+  created_at         DateTime @default(now())
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("security_events")
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  user_id    Int?
+  action     String
+  resource   String?
+  details    String?  @db.Text
+  table_name String?
+  record_id  Int?
+  old_values Json?
+  new_values Json?
+  ip_address String?
+  created_at DateTime @default(now())
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("audit_log")
+}
+
+model DiscountCoupon {
+  id             Int          @id @default(autoincrement())
+  code           String       @unique
+  discount_type  String       @default("percentage") // percentage, fixed
+  discount_value Decimal      @db.Decimal(10, 2)
+  max_uses       Int?
+  used_count     Int          @default(0)
+  expires_at     DateTime?
+  is_active      Boolean      @default(true)
+  created_at     DateTime     @default(now())
+
+  usage CouponUsage[]
+
+  @@map("discount_coupons")
+}
+
+model CouponUsage {
+  id         Int      @id @default(autoincrement())
+  coupon_id  Int
+  user_id    Int
+  used_at    DateTime @default(now())
+
+  coupon DiscountCoupon @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
+  user   User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("coupon_usage")
+}
+
+model DownloadLog {
+  id            Int      @id @default(autoincrement())
+  file_id       Int
+  user_id       Int?
+  user_ip       String?
+  download_date DateTime @default(now())
+
+  @@map("download_logs")
+}
+
+model UserBadge {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  badge_key String
+  earned_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, badge_key])
+  @@map("user_badges")
+}
+
+model AdminRememberToken {
+  id         Int      @id @default(autoincrement())
+  admin_id   Int
+  token      String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  @@map("admin_remember_tokens")
+}
+
+model UploadedFile {
+  id             Int      @id @default(autoincrement())
+  course_id      Int?
+  lesson_id      Int?
+  uploaded_by    Int
+  original_name  String
+  file_path      String   @db.VarChar(500)
+  file_size      Int      @default(0)
+  download_count Int      @default(0)
+  created_at     DateTime @default(now())
+
+  course Course? @relation(fields: [course_id], references: [id], onDelete: SetNull)
+
+  @@map("uploaded_files")
+}

@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f1f5f9;
+  --color-foreground: #0f172a;
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+
+  --color-accent: #2563eb;
+  /* Logo-matched teal and purple accents */
+  --color-teal-400: #22d3ee;
+  --color-teal-500: #06b6d4;
+  --color-teal-600: #0891b2;
+  --color-purple-500: #8b5cf6;
+  --color-purple-600: #7c3aed;
+  --color-glass: rgba(255, 255, 255, 0.72);
+  --color-glass-border: rgba(15, 23, 42, 0.08);
+
+  --font-heading: "Outfit", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-arabic: "Noto Kufi Arabic", "Segoe UI", system-ui, sans-serif;
+
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+}
+
+@layer base {
+  :root {
+    --background: #f1f5f9;
+    --foreground: #0f172a;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* RTL: switch to Arabic font */
+  [dir="rtl"] body,
+  [dir="rtl"] {
+    font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6 {
+    font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: var(--color-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.06), transparent);
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold rounded-lg shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:scale-[1.02] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98];
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-primary-600;
+  }
+
+  .cyber-grid {
+    background-size: 40px 40px;
+    background-image:
+      linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  }
+
+  .mesh-gradient {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, 0.08), transparent),
+      radial-gradient(ellipse 50% 30% at 0% 100%, rgba(30, 64, 175, 0.06), transparent),
+      var(--background);
+  }
+}
+
+@layer utilities {
+  .glow-text {
+    text-shadow: 0 0 24px rgba(37, 99, 235, 0.25);
+  }
+}

@@ -1,0 +1,98 @@
+<svg viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="55%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="flagGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="mapGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield left arm — thick blue curved stroke -->
+  <path d="M 97 15 C 52 24, 19 65, 13 120 C 7 176, 38 215, 97 233"
+    fill="none" stroke="url(#shieldGrad)" stroke-width="27" stroke-linecap="round"/>
+
+  <!-- Shield right body — white fill -->
+  <path d="M 97 15 L 178 39 C 196 46, 200 66, 200 88 L 200 132
+    Q 198 180, 160 212 L 127 230 L 97 233"
+    fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Subtle right-side tint -->
+  <path d="M 100 19 L 174 41 C 190 47, 194 66, 194 88 L 194 132
+    Q 192 176, 156 206 L 125 223 L 100 226"
+    fill="url(#shieldGrad)" opacity="0.06"/>
+
+  <!-- Flag pole -->
+  <rect x="95" y="5" width="4" height="53" rx="2" fill="white" opacity="0.95"/>
+
+  <!-- Flag -->
+  <path d="M 99 8 L 150 21 Q 152 23, 150 31 L 141 37 L 99 33 Z"
+    fill="url(#flagGrad)"/>
+  <!-- Flag ripple hint -->
+  <path d="M 120 21 Q 124 23, 120 27" stroke="white" stroke-width="1.2" fill="none" opacity="0.5"/>
+
+  <!-- Map shape — stylised Saudi Arabia polygon -->
+  <path d="M 80 93 L 99 78 L 122 80 L 144 93 L 150 114 L 140 132
+    L 116 147 L 99 147 L 83 133 L 74 115 Z"
+    fill="url(#mapGrad)"/>
+
+  <!-- Map inner highlight -->
+  <path d="M 88 101 L 101 91 L 119 93 L 133 103 L 137 117 L 127 131
+    L 111 137 L 97 136 L 85 123 L 81 109 Z"
+    fill="white" opacity="0.12"/>
+
+  <!-- Network lines -->
+  <g stroke="white" stroke-width="1.2" opacity="0.85">
+    <line x1="80" y1="93" x2="99" y2="78"/>
+    <line x1="99" y1="78" x2="122" y2="80"/>
+    <line x1="122" y1="80" x2="144" y2="93"/>
+    <line x1="144" y1="93" x2="150" y2="114"/>
+    <line x1="150" y1="114" x2="140" y2="132"/>
+    <line x1="140" y1="132" x2="116" y2="147"/>
+    <line x1="116" y1="147" x2="99" y2="147"/>
+    <line x1="99" y1="147" x2="83" y2="133"/>
+    <line x1="83" y1="133" x2="74" y2="115"/>
+    <line x1="74" y1="115" x2="80" y2="93"/>
+    <!-- Spokes to centre hub -->
+    <line x1="112" y1="113" x2="80" y2="93"/>
+    <line x1="112" y1="113" x2="122" y2="80"/>
+    <line x1="112" y1="113" x2="150" y2="114"/>
+    <line x1="112" y1="113" x2="116" y2="147"/>
+    <line x1="112" y1="113" x2="74" y2="115"/>
+    <!-- Cross diagonals -->
+    <line x1="99" y1="78" x2="150" y2="114" opacity="0.45"/>
+    <line x1="80" y1="93" x2="140" y2="132" opacity="0.45"/>
+    <line x1="144" y1="93" x2="83" y2="133" opacity="0.45"/>
+  </g>
+
+  <!-- Network nodes -->
+  <g fill="white" opacity="0.95">
+    <circle cx="80"  cy="93"  r="3.5"/>
+    <circle cx="99"  cy="78"  r="3.5"/>
+    <circle cx="122" cy="80"  r="3.5"/>
+    <circle cx="144" cy="93"  r="3.5"/>
+    <circle cx="150" cy="114" r="3.5"/>
+    <circle cx="140" cy="132" r="3.5"/>
+    <circle cx="116" cy="147" r="3.5"/>
+    <circle cx="99"  cy="147" r="3.5"/>
+    <circle cx="83"  cy="133" r="3.5"/>
+    <circle cx="74"  cy="115" r="3.5"/>
+    <circle cx="112" cy="113" r="5.5"/><!-- centre hub -->
+  </g>
+
+  <!-- Scattered pixel squares — left -->
+  <rect x="5"  y="124" width="10" height="10" rx="2"   fill="#2563eb" opacity="0.70"/>
+  <rect x="21" y="150" width="7"  height="7"  rx="1.5" fill="#3b82f6" opacity="0.55"/>
+  <rect x="31" y="137" width="5"  height="5"  rx="1"   fill="#60a5fa" opacity="0.45"/>
+  <!-- Scattered pixel squares — right -->
+  <rect x="181" y="67" width="10" height="10" rx="2"   fill="#3b82f6" opacity="0.70"/>
+  <rect x="189" y="89" width="7"  height="7"  rx="1.5" fill="#2563eb" opacity="0.55"/>
+  <rect x="186" y="51" width="5"  height="5"  rx="1"   fill="#60a5fa" opacity="0.45"/>
+</svg>
