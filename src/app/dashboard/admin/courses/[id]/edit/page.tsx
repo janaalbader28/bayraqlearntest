@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import {
-export const dynamic = "force-dynamic";
   ArrowLeft, Loader2, Upload, Link2, Plus, Trash2,
   ChevronRight, ChevronLeft, BookOpen, Video,
 } from "lucide-react";
+export const dynamic = "force-dynamic";
 
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-blue-200 focus:bg-white focus:ring-4 focus:ring-blue-600/10";
